@@ -24,6 +24,7 @@ function seed(): void {
     DELETE FROM developers;
     DELETE FROM disclaimers;
     DELETE FROM users;
+    DELETE FROM sqlite_sequence;
   `);
 
   // ─── Disclaimers ────────────────────────────────────────────────────────

@@ -10,7 +10,7 @@ import { runFullAnalysis } from "./engine/yield";
 import { scoreDeveloperRisk } from "./engine/risk";
 import { detectRedFlags } from "./engine/redflags";
 import { forecastAppreciation } from "./engine/appreciation";
-import type { AnalysisInput, Developer, AreaTrend, Unit, PaymentPlan } from "./types";
+import type { AnalysisInput, Developer, AreaTrend, Unit, PaymentPlan, ServiceCharge } from "./types";
 
 const JSON_HEADERS = { "Content-Type": "application/json" };
 
@@ -74,7 +74,23 @@ async function handleProjects(): Promise<Response> {
       .prepare("SELECT * FROM payment_plans WHERE project_id = ? LIMIT 1")
       .get(proj.id) as PaymentPlan | undefined;
 
-    return { ...proj, units, payment_plan: paymentPlan ?? null };
+    // Get project-specific service charge (most recent year first)
+    const projectServiceCharge = db
+      .prepare(
+        "SELECT * FROM service_charges WHERE project_id = ? ORDER BY year DESC LIMIT 1"
+      )
+      .get(proj.id) as ServiceCharge | undefined;
+
+    // Fall back to area-level service charge
+    const areaServiceCharge = db
+      .prepare(
+        "SELECT * FROM service_charges WHERE project_id IS NULL AND area = ? ORDER BY year DESC LIMIT 1"
+      )
+      .get(proj.area as string) as ServiceCharge | undefined;
+
+    const serviceCharge = projectServiceCharge ?? areaServiceCharge ?? null;
+
+    return { ...proj, units, payment_plan: paymentPlan ?? null, service_charge: serviceCharge };
   });
 
   return ok({ projects: result });
