@@ -9,6 +9,7 @@ interface ProjectOption {
   developer_id: number;
   units: { id: number; type: string; size_sqft: number; list_price: number }[];
   payment_plan: PaymentPlan | null;
+  service_charge: { rate_per_sqft: number; year: number } | null;
 }
 
 interface Props {
@@ -53,7 +54,7 @@ const DealAnalyzer: FC<Props> = ({ onResult, onSaved }) => {
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
   const selectedUnit = selectedProject?.units.find((u) => u.id === selectedUnitId);
 
-  // Auto-populate payment plan when project changes
+  // Auto-populate payment plan and service charge when project changes
   useEffect(() => {
     if (selectedProject?.payment_plan) {
       const pp = selectedProject.payment_plan;
@@ -63,6 +64,9 @@ const DealAnalyzer: FC<Props> = ({ onResult, onSaved }) => {
       setPostHandoverPct(pp.post_handover_pct);
       setPostHandoverMonths(pp.post_handover_months);
       setDldWaiver(!!pp.dld_waiver);
+    }
+    if (selectedProject?.service_charge) {
+      setServiceChargeRate(selectedProject.service_charge.rate_per_sqft);
     }
   }, [selectedProject]);
 
