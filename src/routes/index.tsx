@@ -520,7 +520,14 @@ function Home() {
       {/* ── Footer ── */}
       <footer className="border-t border-gray-100 bg-gray-50 py-8">
         <div className="mx-auto max-w-6xl px-6 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} {businessName}. All rights reserved.
+          <div className="flex justify-center gap-6">
+            <a href="/blog" className="hover:text-[#1a3355] transition-colors">
+              Blog
+            </a>
+          </div>
+          <div className="mt-4">
+            &copy; {new Date().getFullYear()} {businessName}. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>
