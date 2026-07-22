@@ -13,7 +13,8 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "My site" },
+      { title: "OffPlanIQ — Dubai Off-Plan Investment Analytics" },
+      { name: "description", content: "AI-powered investment analytics for Dubai off-plan real estate. Independent data-grounded analysis — not a brokerage." },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
